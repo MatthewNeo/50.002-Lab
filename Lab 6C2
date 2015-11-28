@@ -3,7 +3,8 @@
 *.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\lab6ctl.jsim"
 
 .subckt ctl reset id[31:26] ra2sel bsel 
-+ alufn[5:0] wdsel[1:0] werf moe wr
++ alufn[5:0] wdsel[1:0] werf moe wr pcsel[2:0]
++ asel wasel
 
 Xctl vdd 0 0 id[31:26] // one read port 
 + pcsel[2:0] wasel asel ra2sel bsel alufn[5:0] 

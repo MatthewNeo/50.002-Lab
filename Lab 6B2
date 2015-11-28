@@ -12,7 +12,8 @@ Xinvert outpu output inverter
 .ends
 
 .subckt regfile clk werf ra2sel ra[4:0] rb[4:0] rc[4:0]
-+ wdata[31:0] radata[31:0] rbdata[31:0] 
++ wdata[31:0] radata[31:0] rbdata[31:0] wa[4:0]
+
 Xcheck ra[4:0] aout checkreg
 Xcheckk ra2mux[4:0] bout checkreg
 
@@ -21,7 +22,7 @@ Xra2sel ra2sel#5 rb[4:0] rc[4:0] ra2mux[4:0] mux2
 Xregfile 
 + vdd 0 0 ra[4:0] adata[31:0] // A read port 
 + vdd 0 0 ra2mux[4:0] bdata[31:0] // B read port 
-+ 0 clk werf rc[4:0] wdata[31:0] // write port 
++ 0 clk werf wa[4:0] wdata[31:0] // write port 
 + $memory width=32 nlocations=31
 
 Xthirtyone aout#32 0#32 adata[31:0] radata[31:0] mux2
