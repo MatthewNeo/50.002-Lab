@@ -1,0 +1,113 @@
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\nominal.jsim" 
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\stdcell.jsim" 
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\lab6checkoff.jsim"
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab2" 
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 3E"
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6A"
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6B"
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6C.jsim"
+
+.subckt knex a b
+.connect a b
+.ends
+.subckt pcsextxfour c[15:0] cnew[31:0] 
+Xconn1 c15#14 cnew[31:18] knex
+Xconn2 c[15:0] cnew[17:2] knex
+Xconn3 0#2 cnew[1:0] knex
+.ends
+.subckt signext c[15:0] signext[31:0]
+Xknex c15#16 signext[31:16] knex
+Xknex2 c[15:0] signext[15:0] knex
+.ends
+.subckt offset dmux[31:0] cnew[31:0] offset[31:0]
+Xoffset1 dmux0 cnew0 0 offset0 c0 FA
+Xoffset2 dmux[31:1] cnew[31:1] c[30:0] offset[31:1] c[31:1] FA
+.ends
+
+*.subckt beta clk reset ia[31:0] id[31:0] ma[31:0]
+*+ moe mrd[31:0] wr mwd[31:0] 
+.subckt beta clk reset irq ia[31:0] id[31:0] 
++ ma[31:0]
++ moe mrd[31:0] wr mwd[31:0] 
+
+*PC UNIT
+*subckt pc clk reset ia[31:0]
+*Xpc clk reset ia[31:0] pc
+*INPUT: clk, reset, pcsel[2:0] offset[31:0], jt
+*OUTPUT: ia[31:0] dmux[31:0] 
+
+Xpc clk reset pcsel[2:0] jt[31:0] offset[30:0] ia[31:0] dmux[31:0] pc
+
+*FROM INSTRUCTION MEMORY
+*PC+4+C*
+Xpcsextfour id[15:0] cnew[31:0] pcsextxfour
+
+
+
+*PC+4 + C<<2
+Xbranchoffset dmux[31:0] cnew[31:0] offset[31:0] offset 
+
+
+
+*REGFILE UNIT
+*.subckt regfile clk werf ra2sel ra[4:0] 
+*+ rb[4:0] rc[4:0]
+*+ wdata[31:0] radata[31:0] rbdata[31:0]
+*INPUT: clk, werf, ra2sel, id, wdata
+*OUTPUT: radata, rbdata 
+Xregfile clk werf ra2sel id[20:16] id[15:11] id[25:21]
++ wdata[31:0] radata[31:0] rbdata[31:0] regfile
+
+*B) WASEL UNIT
+*EITHER RC OR XP 
+Xwasel wasel#4 rc[4:1] vdd#4 wa[4:1] mux2
+Xwasell wasel rc0 0 wa0 mux2
+
+*z logic
+Xz radata[31:24] radata[23:16] radata[15:8] radata[7:0]  Y1[7:0] or4
+Xzz Y1[7:4] Y1[3:0] Y2[1:0] or4
+Xzzz Y21 Y20 z nor2
+
+*JT
+Xjt radata[31:2] vdd#30 jt[31:2] and2
+Xjtt radata[1:0] 0#2 jt[1:0] and2
+
+*ASEL UNIT
+Xasel asel radata31 0 alua31 mux2
+Xasell asel#31 radata[30:0] offset[30:0] alua[30:0] mux2
+
+*CONTROL LOGIC UNIT 
+*.subckt ctl reset id[31:26] ra2sel bsel 
+*+ alufn[5:0] wdsel[1:0] werf moe wr
+
+Xctl reset id[31:26] ra2sel bsel 
++ alufn[5:0] wdsel[1:0] werf moe wr ctl 
+
+*BSEL UNIT
+*output = alub[31:0]
+Xsignext id[15:0] csignext[31:0] signext
+Xbselmux bsel#32 rbdata[31:0] csignext[31:0] alub[31:0] mux2
+
+*ALU UNIT
+*.subckt alu ALUFN[5:0] A[31:0] B[31:0] 
+*alu[31:0] z v n
+Xalu alufn[5:0] alua[31:0] alub[31:0] 
++ alu[31:0] z v n alu
+
+*DATA MEMORY UNIT
+Xma alu[31:0] ma[31:0] knex
+
+
+*If moe is 1, the memory will drive these 
+*signals with the contents of the memory 
+*location specified by ma[31:0].
+
+
+*If wr is 1, this is the data that will be 
+*written into memory at the end of the 
+*current cycle.
+Xmwd wr#32 rbdata[31:0] mwd[31:0] and2
+
+*WDSEL UNIT
+Xwdsel wdsel0#32 wdsel1#32 dmux[31:0] alu[31:0] mrd[31:0] 0#32 wdata[31:0] mux4
+.ends

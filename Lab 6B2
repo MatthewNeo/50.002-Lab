@@ -1,0 +1,29 @@
+*.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\nominal.jsim" 
+*.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\stdcell.jsim" 
+*.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\lab6regfile.jsim"
+*.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab2" 
+
+.subckt checkreg ra[4:0] output
+Xdigit ra4 ra3 out1 and2
+Xdigitt ra2 ra1 out2 and2
+Xdigittt out1 out2 out3 and2
+Xdigitttt out3 ra0 outpu and2
+Xinvert outpu output inverter
+.ends
+
+.subckt regfile clk werf ra2sel ra[4:0] rb[4:0] rc[4:0]
++ wdata[31:0] radata[31:0] rbdata[31:0] 
+Xcheck ra[4:0] aout checkreg
+Xcheckk ra2mux[4:0] bout checkreg
+
+Xra2sel ra2sel#5 rb[4:0] rc[4:0] ra2mux[4:0] mux2
+
+Xregfile 
++ vdd 0 0 ra[4:0] adata[31:0] // A read port 
++ vdd 0 0 ra2mux[4:0] bdata[31:0] // B read port 
++ 0 clk werf rc[4:0] wdata[31:0] // write port 
++ $memory width=32 nlocations=31
+
+Xthirtyone aout#32 0#32 adata[31:0] radata[31:0] mux2
+Xthirtyone2 bout#32 0#32 bdata[31:0] rbdata[31:0] mux2
+.ends

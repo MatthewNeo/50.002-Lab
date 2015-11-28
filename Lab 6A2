@@ -1,0 +1,50 @@
+*.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\nominal.jsim" 
+*.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\stdcell.jsim" 
+*.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\lab6pc.jsim"
+*.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab2" 
+
+.subckt pc clk reset pcsel[2:0] jt[31:0] offset[30:0] ia[31:0] dmux[31:0] 
+
+*5-INPUT PCSEL MUX 
+*ensure jmp can only clear or leave the SP bit unchanged
+*what is old pc31??
+Xjmp jt31 ia31 jtnew31 and2
+
+*NEED TO CONNECT BIT 31 OF PC+4 TO PC31 DIRECTLY
+*BUT WHAT HAPPENS TO THE MUX INPUT?  
+*0x80000004 is loaded into pc during interrupts
+Xmuxfirst1 pcsel0 pcsel1 ia31 ia31 jtnew31 
++ vdd ztrans31 mux4
+Xmuxfirst2 pcsel0#28 pcsel1#28 dmux[30:3] offset[30:3] jt[30:3] 0#28
++ ztrans[30:3] mux4
+Xmuxfirst3 pcsel0 pcsel1 dmux2 offset2 jt[2] vdd ztrans2 mux4
+Xmuxfirst4 pcsel0#2 pcsel1#2 dmux[1:0] offset[1:0] jt[1:0] 0#2 ztrans[1:0] mux4
+
+*0x80000008 is loaded into the pc during exceptions
+Xmussecond1 pcsel2 ztrans31 vdd d31 mux2
+Xmussecond2 pcsel2#27 ztrans[30:4] 0#27 d[30:4] mux2
+Xmussecond3 pcsel2 ztrans3 vdd d3 mux2
+Xmussecond4 pcsel2#3 ztrans[2:0] 0#3 d[2:0] mux2
+
+*RESET MUX 
+
+*0x80000000 is loaded into the pc during reset
+Xresetmux1 reset d31 vdd dpc31 mux2
+Xresetmux2 reset#31 d[30:0] 0#31 dpc[30:0] mux2
+
+*PC REGISTER
+Xpc dpc[31:0] clk#32 ia[31:0] dreg
+
+*+4 
+Xplus41 ia0 0 0 dmux0 c0 FA
+Xplus42 ia1 0 c0 dmux1 c1 FA
+Xplus43 ia2 vdd c1 dmux2 c2 FA
+Xplus44 ia[31:3] 0#29 c[30:2] dmux[31:3] c[31:3] FA
+.ends 
+
+
+
+
+.subckt knex a b
+.connect a b
+.ends
