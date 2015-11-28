@@ -4,11 +4,11 @@
 
 .subckt ctl reset id[31:26] ra2sel bsel 
 + alufn[5:0] wdsel[1:0] werf moe wr pcsel[2:0]
-+ asel wasel z
++ asel wasel z irqnew
 
 Xctl vdd 0 0 id[31:26] // one read port 
-+ pcsel2 xpcsel[1:0] wasel asel ra2sel bsel alufn[5:0] 
-+ wdsel[1:0] werf moe xwr 
++ ipcsel2 xpcsel[1:0] iwasel asel ra2sel bsel alufn[5:0] 
++ iwdsel[1:0] iwerf moe xwr 
 + $memory width=18 nlocations=64 contents=( 
 	+ 0b000000000000000000 // opcode=0b000000 
 	+ 0b000000000000000000 // opcode=0b000001 
@@ -77,7 +77,7 @@ Xctl vdd 0 0 id[31:26] // one read port
 	+ )
 
 Xresetinvert reset resetinvert inverter
-Xand xwr resetinvert wr and2
+Xand xwr resetinvert iwr and2
 
 Xzinvert z zinv inverter
 
@@ -85,5 +85,22 @@ Xzinvert z zinv inverter
 *id26=0(BNE) xz=zinv
 Xchoosepcsel id26 zinv z xz mux2 
 *only for BEQ,BNE (pcsel1,0 == 0,1)
-Xonlybeq xpcsel0#2 xpcsel1#2 xpcsel[1:0] 0 xz xpcsel[1:0] xpcsel[1:0] pcsel[1:0] mux4
+Xonlybeq xpcsel0#2 xpcsel1#2 xpcsel[1:0] 0 xz xpcsel[1:0] xpcsel[1:0] ipcsel[1:0] mux4
+
+*PCSEL = 4 when IRQNEW = 1
+Xinterruptpcsel1 irqnew ipcsel2 vdd pcsel2 mux2
+Xinterruptpcsel2 irqnew#2 ipcsel[1:0] 0#2 pcsel[1:0] mux2
+
+*WASEL TO 1 when IRQNEW = 1
+Xinterruptwasel irqnew iwasel vdd wasel mux2
+
+*WERF TO 1 when IRQNEW = 1
+Xinterruptwerf irqnew iwerf vdd werf mux2
+
+*WDSEL TO 0 when IRQNEW = 1
+Xinterruptwdsel irqnew#2 iwdsel[1:0] 0#2 wdsel[1:0] mux2
+
+*WR TO 0 when IRQNEW = 1
+Xinterruptwr irqnew iwr 0 wr mux2
+
 .ends
