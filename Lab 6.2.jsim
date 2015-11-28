@@ -82,7 +82,7 @@ Xasell asel#31 radata[30:0] offset[30:0] alua[30:0] mux2
 
 Xctl reset id[31:26] ra2sel bsel 
 + alufn[5:0] wdsel[1:0] werf moe wr 
-+ pcsel[2:0] asel wasel ctl 
++ pcsel[2:0] asel wasel z ctl 
 
 *BSEL UNIT
 *output = alub[31:0]
