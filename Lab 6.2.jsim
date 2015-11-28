@@ -3,9 +3,9 @@
 .include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\lab6checkoff.jsim"
 .include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab2" 
 .include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 3E"
-.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6A"
-.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6B"
-.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6C.jsim"
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6A2"
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6B2"
+.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab 6C2"
 
 .subckt knex a b
 .connect a b
@@ -64,9 +64,9 @@ Xwasel wasel#4 id[25:22] vdd#4 wa[4:1] mux2
 Xwasell wasel id21 0 wa0 mux2
 
 *z logic
-Xz radata[31:24] radata[23:16] radata[15:8] radata[7:0]  Y1[7:0] or4
-Xzz Y1[7:4] Y1[3:0] Y2[1:0] or4
-Xzzz Y21 Y20 z nor2
+Xz radata[31:24] radata[23:16] radata[15:8] radata[7:0] out1[7:0] or4
+Xzz out1[7:4] out1[3:0] out2[1:0] or4
+Xzzz out21 out20 z nor2
 
 *JT
 Xjt radata[31:2] vdd#30 jt[31:2] and2
@@ -93,7 +93,7 @@ Xbselmux bsel#32 rbdata[31:0] csignext[31:0] alub[31:0] mux2
 *.subckt alu ALUFN[5:0] A[31:0] B[31:0] 
 *alu[31:0] z v n
 Xalu alufn[5:0] alua[31:0] alub[31:0] 
-+ alu[31:0] z v n alu
++ alu[31:0] zee v n alu
 
 *DATA MEMORY UNIT
 Xma alu[31:0] ma[31:0] knex

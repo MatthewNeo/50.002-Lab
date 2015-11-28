@@ -2,7 +2,6 @@
 *.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\stdcell.jsim" 
 *.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\lab6pc.jsim"
 *.include "C:\Users\kevin\Desktop\my THING\school\SUTD\ISTD Term 1\50.002 Computation Structures\jsim\Lab2" 
-.subckt pc clk reset ia[31:0]
 .subckt pc clk reset pcsel[2:0] jt[31:0] offset[30:0] ia[31:0] dmux[31:0] 
 
 *5-INPUT PCSEL MUX 
@@ -41,10 +40,3 @@ Xplus42 ia1 0 c0 dmux1 c1 FA
 Xplus43 ia2 vdd c1 dmux2 c2 FA
 Xplus44 ia[31:3] 0#29 c[30:2] dmux[31:3] c[31:3] FA
 .ends 
-
-
-
-
-.subckt knex a b
-.connect a b
-.ends
