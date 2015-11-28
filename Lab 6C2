@@ -41,7 +41,7 @@ Xctl vdd 0 0 id[31:26] // one read port
 	+ 0b000000000000000000
 	+ 0b001000000000000100 //BEQ
 	+ 0b001000000000000100 //BNE
-	+ 0b000000000000000000 //LDR
+	+ 0b000010001101010110 //LDR
  	+ 0b000000000000001100 //ADD
 	+ 0b000000000000101100 //SUB
 	+ 0b000000000000000000 //MUL
@@ -85,5 +85,5 @@ Xzinvert z zinv inverter
 *id26=0(BNE) xz=zinv
 Xchoosepcsel id26 zinv z xz mux2 
 *only for BEQ,BNE (pcsel1,0 == 0,1)
-Xonlybeq pcsel0#2 pcsel1#2 xpcsel[1:0] 0 xz xpcsel[1:0] xpcsel[1:0] pcsel[1:0] mux4
+Xonlybeq xpcsel0#2 xpcsel1#2 xpcsel[1:0] 0 xz xpcsel[1:0] xpcsel[1:0] pcsel[1:0] mux4
 .ends
